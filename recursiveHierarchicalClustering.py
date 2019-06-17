@@ -70,7 +70,7 @@ def getSidNgramMap(inputPath, sids=None):
     return sid_seq
 
 
-def splitCluster((baseCluster, diameter, baseSum, cid), matrix):
+def splitCluster(baseCluster, diameter, baseSum, cid, matrix):
     """
     :type baseCluster: List[int]
           - take in the cluster to be splited as a list of stream index
@@ -567,6 +567,7 @@ def slidingMaxSweetSpot(evalResults, windowSize=5):
     """
     step = 1
     keys = [x[0] for x in evalResults.items()]
+    print('evalResults.items()', evalResults.items())
     start = min(keys)  # + 0.5 * windowSize
     end = max(keys)  # - 0.5 * windowSize
     if (start >= end):
@@ -752,14 +753,19 @@ def runDiana(outPath, sid_seq, matrix=None, matrixPath='tmpMatrix.dat',
             splitStartTime = time.time()
             # cProfile.runctx('splitCluster(clusters.pop(), baseMatrix)', globals(), locals())
             # exit(0)
+            popped = clusters.pop()
+            baseCluster = list(popped[0])
+            diameter = popped[1]
+            baseSum = popped[2]
             (clusterA, clusterB, baseSum) = (
-                splitCluster(clusters.pop(), baseMatrix))
+                splitCluster(baseCluster, diameter, baseSum, popped[3], baseMatrix))
             # print('splitting cluster %f, %d' % (time.time() - splitStartTime, len(clusters)))
             splitTotal += time.time() - splitStartTime
 
             cid += 1
             clusters.append((clusterA, getDia(clusterA, baseMatrix),
                              baseSum, cid))
+
             cid += 1
             clusters.append((clusterB, getDia(clusterB, baseMatrix),
                              None, cid))

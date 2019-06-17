@@ -1,12 +1,12 @@
 import math
 import numpy as np
 import scipy.stats
-import cPickle
+import pickle as cPickle
 import json
 import sys
 import cProfile
 import pstats
-import StringIO
+from functools import reduce
 
 
 def avgStdWithZero(l, numZero):
@@ -235,9 +235,9 @@ def mutual_info_feature(cid_pattern_cnt, cid_user_cnt=None,
     for pattern in pattern_cid_cnt:
         total_pattern_cnt[pattern] = sum([x[1] for x in pattern_cid_cnt[pattern].items()])
 
-    print 'how many patterns', len(pattern_cid_cnt)
+    print ('how many patterns', len(pattern_cid_cnt))
 
-    print 'mutual information...'
+    print ('mutual information...')
 
     """
     # I (feature word, class c):
@@ -312,9 +312,9 @@ def print_mutual_info(fname, cid_user_cnt, cid_pattern_cnt):
             if w not in pattern_cid_cnt: pattern_cid_cnt[w] = {}
             pattern_cid_cnt[w][cid] = cnt
 
-    print 'how many patterns', len(pattern_cid_cnt)
+    print ('how many patterns', len(pattern_cid_cnt))
 
-    print 'mutual information...'
+    print ('mutual information...')
     # mutual information
     """
     # I (feature word, class c):
@@ -339,8 +339,8 @@ def print_mutual_info(fname, cid_user_cnt, cid_pattern_cnt):
     for cid in cid_user_cnt:
         N+= cid_user_cnt[cid]
 
-    print 'total N', N
-    print 'how many class?', len(cid_user_cnt)
+    print ('total N', N)
+    print ('how many class?', len(cid_user_cnt))
 
     fo = open(fname,'w')
     for cid in cid_pattern_cnt:
@@ -384,7 +384,7 @@ def print_mutual_info(fname, cid_user_cnt, cid_pattern_cnt):
                 print 'A', (1.0*A/N) * math.log(tmpA,2)
             """
 
-        sortlist = sortlist = sorted(w_mutual.iteritems(), key=lambda (k,v): (v,k))
+        sortlist = sortlist = sorted(w_mutual.items(), key=lambda kv: (kv[1],kv[0]))
         sortlist.reverse()
         tmpcnt = 0
         # for understanding purpuse, let's print D and C as well
@@ -396,7 +396,7 @@ def print_mutual_info(fname, cid_user_cnt, cid_pattern_cnt):
             fo.write('##%s\t%s\t%s\t%s\t%s\n' %(cid, w, cnt, D, C))
             tmpcnt += 1
             if tmpcnt>10: break
-        print 'done for cluster', cid
+        print ('done for cluster', cid)
     fo.close()
 
     return
