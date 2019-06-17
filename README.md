@@ -96,7 +96,7 @@ $> python visulization.py result.json  input.txt vis/vis.json
 ### Running webserver
 To properly display the visulization, you need to set up a web server under folder `vis`:
 ```
-$> python -m SimpleHTTPServer
+$> python -m http.server
 ```
 
 And then by visiting `http://localhost:8000/multi_color.html?json=vis.json` you will be able to look at the visulization for `vis.json`.
