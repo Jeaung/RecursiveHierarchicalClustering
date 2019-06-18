@@ -196,7 +196,7 @@ def partialMatrix(sids, idfMap, ngramPath, tmpPrefix, outputPath,
     if (total < MIN_SERVER * len(servers)):
         step = MIN_SERVER
     else:
-        step = total / len(servers) + 1
+        step = int(total / len(servers) + 1)
     processes = []
     start = 0
     cPickle.dump(idfMap, open('%s%sidf.pkl' % (outputPath, tmpPrefix), 'wb'))
@@ -265,7 +265,7 @@ def fullMatrix(inputPath, outputPath):
     if (total < MIN_SERVER * len(servers)):
         step = MIN_SERVER
     else:
-        step = total / len(servers) + 1
+        step = int(total / len(servers) + 1)
 
     processes = []
     start = 0
