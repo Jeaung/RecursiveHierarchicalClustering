@@ -152,7 +152,7 @@ def calDist(inputPath, sidsPath, outputPath, tmpPrefix='', idfMapPath=None):
     if (len(fromSids) < MIN_SLICE * THREAD_NUM):
         step = MIN_SLICE
     else:
-        step = len(fromSids) / THREAD_NUM + 1
+        step = int(len(fromSids) / THREAD_NUM + 1)
 
     print('[LOG]: %s preprocessing takes %.4fs' %
           (datetime.datetime.now(), time.time() - startTime))
@@ -212,7 +212,7 @@ def partialMatrix(sids, idfMap, ngramPath, tmpPrefix, outputPath,
     if (total < MIN_SERVER * len(servers)):
         step = MIN_SERVER
     else:
-        step = total / len(servers) + 1
+        step = int(total / len(servers) + 1)
     processes = []
     start = 0
     cPickle.dump(idfMap, open('%s%sidf.pkl' % (outputPath, tmpPrefix), 'wb'))
