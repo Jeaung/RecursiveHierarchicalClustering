@@ -34,7 +34,6 @@ import sys
 import json
 import time
 # import cProfile
-import cPickle
 import numpy as np
 import recursiveHierarchicalClustering as rhc
 import calculateDistanceInt as calculateDistance
@@ -83,7 +82,7 @@ class HCClustering:
                 maxDist = curMax
         return maxDist
 
-    def splitCluster(self, (baseCluster, diameter, cid)):
+    def splitCluster(self, baseCluster, diameter, cid):
         """
         :type baseCluster: List[int]
             - take in the cluster to be splited as a list of stream index
@@ -187,7 +186,7 @@ class HCClustering:
             secondEntry += np.sum(sumRowCur) ** 2
         return (firstEntry - secondEntry / m) / m
 
-    def evaluateModularityShift(self, (clusterA, clusterB), sumAB):
+    def evaluateModularityShift(self, clusterA, clusterB, sumAB):
         """
         the reasoning is detailed in recursiveHierarchicalClustering.py
         :type clusterA: List[int]
@@ -236,8 +235,9 @@ class HCClustering:
             clusterHi.append((parentCid, cid + 1, cid + 2))
 
             curTime = time.time()
+            popped = clusters.pop()
             (clusterA, clusterB, sumEntryA, sumEntryB, sumAB) = \
-                (self.splitCluster(clusters.pop()))
+                (self.splitCluster(popped[0], popped[1], popped[2]))
             splitTotal += time.time() - curTime
 
             curTime = time.time()
@@ -262,7 +262,7 @@ class HCClustering:
             else:
                 # if it is based on the previous scores
                 evalResult = evalResults[len(clusters) - 1] + \
-                    self.evaluateModularityShift((clusterA, clusterB), sumAB)
+                    self.evaluateModularityShift(clusterA, clusterB, sumAB)
             modularityTotal += time.time() - curTime
 
             # print(sorted([len(x[0]) for x in clusters], reverse = True))
